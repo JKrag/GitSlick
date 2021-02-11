@@ -10,6 +10,7 @@ git config alias.chatlog "log --pretty=\"format:%C(green)%aN %C(blue)[%ad]%C(res
 commands() {
   echo "Commands:"
   echo -e "${GREEN}/quit${RC}                  (to quit chat)"
+  echo -e "${GREEN}/help${RC}                  (print list of supported commands)"
   echo -e "${GREEN}/switch <channel name>${RC} (to change #channel"
   echo -e "${GREEN}/create <channel name>${RC} (to create a new #channel)"
   echo -e "${GREEN}/list${RC}                  (to list channels)"
@@ -47,6 +48,9 @@ while true ; do
       :
     elif [ "$cm" = "/quit" ]; then
       exit 0
+    elif [ "$cm" = "/help" ]; then
+      commands
+      echo
     elif [ "$cm" = "/switch" ]; then
       git switch "$options"
       echo "Showing last 5 messages in $options"
