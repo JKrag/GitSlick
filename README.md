@@ -55,3 +55,4 @@ In order of importance - but not necessarily order of implementation:
 * Support multi-line messages.
 * Add Dockerfile that can run the chat. Seems a bit pointless to just Dockerize the tool itself, as you would still need a shell to run it, and thus only avoid installing Git. A more interesting idea could be to make it self-contained in the sense that the Docker container would clone the chat repo internally every time, so it would be self-contained and not leave any residue on the file system once the container is deleted.
 * Private message support, just for the fun of it. This would obviously need encryption of some sort to be "private". One simple option is to rely simply on a "shared secret", which would make it multi-people DM friendly. Another, cooler, option would be to use real public/private key encryption.
+* Add a runmode where chat takes place under the hood in an existing repo, i.e. by pushing chat "channels" to `refs/chat/` instead of `refs/heads/`.
