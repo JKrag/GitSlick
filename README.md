@@ -49,10 +49,12 @@ Every chat message is an empty commit to the repo, and is immediately pushed to 
 
 ## Ideas for the future
 
-In order of importance - but not necessarily order of implementation:
+Maybe slightly in order of importance - but not necessarily order of implementation. I am doing this 95% for fun, so features will get added if, where and when I feel inspired:
 
-* Support sending file attachments. I am still uncertain about the UX of this. Sending them is probably easy enough, probably just using a slash command, but I still have to figure out a good UX for retreiving files at the other end.
-* Support multi-line messages.
-* Add Dockerfile that can run the chat. Seems a bit pointless to just Dockerize the tool itself, as you would still need a shell to run it, and thus only avoid installing Git. A more interesting idea could be to make it self-contained in the sense that the Docker container would clone the chat repo internally every time, so it would be self-contained and not leave any residue on the file system once the container is deleted.
-* Private message support, just for the fun of it. This would obviously need encryption of some sort to be "private". One simple option is to rely simply on a "shared secret", which would make it multi-people DM friendly. Another, cooler, option would be to use real public/private key encryption.
-* Add a runmode where chat takes place under the hood in an existing repo, i.e. by pushing chat "channels" to `refs/chat/` instead of `refs/heads/`.
+* [Support sending file attachments](https://github.com/JKrag/GitSlick/issues/1). 
+* [Support multi-line messages](https://github.com/JKrag/GitSlick/issues/2)
+* [Dockerize the chat runtime](https://github.com/JKrag/GitSlick/issues/3)
+* [Private message support, just for the fun of it](https://github.com/JKrag/GitSlick/issues/4)
+* [Support running in split-screen terminal](https://github.com/JKrag/GitSlick/issues/5)
+* [Add a run-mode where chat takes place under the hood in an existing repo](https://github.com/JKrag/GitSlick/issues/6)
+* I had the idea that it might be a good idea with a small safety check to avoid running chat.sh in the wrong repo. My initial thought was that it could be as simple as checking for the existance of a possibly empty `.gitslick` file in the root of the repo, and aborting f this doesn't exist. But writing this, I realise that it would either have to be an untracked file, or it would have to be copied over and added to each new branch. maybe it could look for this file in the .git folder? More thinking needed.
