@@ -15,6 +15,7 @@ commands() {
   echo -e "${GREEN}/create <channel name>${RC} (to create a new #channel)"
   echo -e "${GREEN}/list${RC}                  (to list channels)"
   echo -e "${GREEN}/repeat [n]${RC}            (repeat last n messages - default 5)"
+  echo -e "${GREEN}/post${RC}                  (write a post aka. multiline message via your regular git message editor)"
 }
 
 welcome() {
@@ -25,6 +26,7 @@ welcome() {
   echo "with NO safety checks or error handling".
   echo
   echo "NOTE: Currently only really supports single line messages. Behaviour undefined if pasting multiline content."
+  echo "But you can now use the ${GREEN}/post${RC} feature if you want to send multiline content."
   echo
   echo -e "You are currenty in folder ${RED}$(pwd)${RC}"
   echo -e "And pushing to ${RED}$(git remote get-url origin --push)${RC}"
@@ -67,6 +69,10 @@ while true ; do
       : "${options:=5}"
       echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
       git chatlog "-$options"
+    elif [ "$cm" = "/post" ]; then
+      git commit --quiet --allow-empty
+      git chatlog -1
+      git push --quiet origin
     else
       message="$cm $options"
       git commit --quiet --allow-empty --message "$message"

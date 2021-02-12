@@ -21,7 +21,7 @@ I can install.
 * Cross-platform (*3)
 * Vendor independent (*4)
 
-1) Even chat in multiple workspaces at once. Just open multiple terminal windows nd chat in different cloned chat repos.
+1) Even chat in multiple workspaces at once. Just open multiple terminal windows and chat in different cloned chat repos.
 2) I could have made it end-2-end encrypted, but have chosen not to, for now, as I find it valuable to have the chat history readable in the remote Git server web-ui.
 3) *GitSlick* only requires a terminal, bash and a reasonably new Git (> 2.27 I would guess), which should never be a problem anywhere I work.
 4) Any Git Server accessible by all clients will do.
