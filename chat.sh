@@ -22,11 +22,11 @@ welcome() {
   echo -e "${CYAN}Welcome to GitSlick, the Git based miniature chat app.${RC}"
   echo
   commands
-  echo "Anything else is treated as a chat message. It will be commited to current dir git repo and pushed immediately to origin"
-  echo "with NO safety checks or error handling".
+  echo -e "Anything else is treated as a chat message. It will be commited to current dir git repo and pushed immediately to origin"
+  echo -e "with NO safety checks or error handling".
   echo
-  echo "NOTE: Currently only really supports single line messages. Behaviour undefined if pasting multiline content."
-  echo "But you can now use the ${GREEN}/post${RC} feature if you want to send multiline content."
+  echo -e "NOTE: Currently only really supports single line messages. Behaviour undefined if pasting multiline content."
+  echo -e "But you can now use the ${GREEN}/post${RC} feature if you want to send multiline content."
   echo
   echo -e "You are currenty in folder ${RED}$(pwd)${RC}"
   echo -e "And pushing to ${RED}$(git remote get-url origin --push)${RC}"
