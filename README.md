@@ -57,3 +57,20 @@ Maybe slightly in order of importance - but not necessarily order of implementat
 * [Support running in split-screen terminal](https://github.com/JKrag/GitSlick/issues/5)
 * [Add a run-mode where chat takes place under the hood in an existing repo](https://github.com/JKrag/GitSlick/issues/6)
 * I had the idea that it might be a good idea with a small safety check to avoid running chat.sh in the wrong repo. My initial thought was that it could be as simple as checking for the existance of a possibly empty `.gitslick` file in the root of the repo, and aborting f this doesn't exist. But writing this, I realise that it would either have to be an untracked file, or it would have to be copied over and added to each new branch. maybe it could look for this file in the .git folder? More thinking needed.
+
+## Docker
+
+In case you want chat without cloning the chat repo locally, and without leaving too many traces on your computer,
+you acn run the whoe thing in Docker.
+
+### Build image
+
+```
+docker to build -t gitslick .
+``` 
+
+### Run image
+
+```
+docker run -it -v ~/.ssh:/tmp/.ssh:ro gitslick -r git@github.com:JKrag/demo.git -e "jankrag@gmail.com" -n "Whale Hail"
+```
