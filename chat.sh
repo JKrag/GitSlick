@@ -5,7 +5,7 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 RC='\033[0m' # Reset Color
 
-git config alias.chatlog "log --pretty=\"format:%C(green)%aN %C(blue)[%ad]%C(reset)%n%B\" --date=relative"
+git config alias.chatlog "log --reverse --pretty=\"format:%C(green)%aN %C(blue)[%ad]%C(reset)%n%B\" --date=relative"
 
 commands() {
   echo "Commands:"
