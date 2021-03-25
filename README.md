@@ -51,7 +51,7 @@ Every chat message is an empty commit to the repo, and is immediately pushed to 
 
 Maybe slightly in order of importance - but not necessarily order of implementation. I am doing this 95% for fun, so features will get added if, where and when I feel inspired:
 
-* [Support sending file attachments](https://github.com/JKrag/GitSlick/issues/1). 
+* [Support sending file attachments](https://github.com/JKrag/GitSlick/issues/1).
 * [Dockerize the chat runtime](https://github.com/JKrag/GitSlick/issues/3)
 * [Private message support, just for the fun of it](https://github.com/JKrag/GitSlick/issues/4)
 * [Support running in split-screen terminal](https://github.com/JKrag/GitSlick/issues/5)
@@ -66,11 +66,11 @@ you acn run the whoe thing in Docker.
 ### Build image
 
 ```
-docker to build -t gitslick .
-``` 
+docker build -t gitslick .
+```
 
 ### Run image
 
 ```
-docker run -it -v ~/.ssh:/tmp/.ssh:ro gitslick -r git@github.com:JKrag/demo.git -e "jankrag@gmail.com" -n "Whale Hail"
+docker run --name tempchat --rm -it -v ~/.ssh:/tmp/.ssh:ro gitslick -r git@github.com:JKrag/demo.git -e "jankrag@gmail.com" -n "Whale Hail"
 ```
