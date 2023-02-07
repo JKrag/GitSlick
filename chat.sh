@@ -33,8 +33,16 @@ welcome() {
   echo
 }
 
-welcome
+title(){
+  BASE=$(basename -s .git "$(git config --get remote.origin.url)")
+  BRANCH=$(git branch --show-current)
+  TITLE="#$BRANCH @ $BASE"
+  printf '\033]2;%s\a' "$TITLE"
+  #printf "\[\e]2;%s\a\]"
+}
 
+welcome
+title
 fetch_print_ff() {
   git fetch --quiet
   git chatlog "..@{u}"
@@ -57,6 +65,7 @@ while true ; do
       echo
     elif [ "$cm" = "/switch" ]; then
       git switch "$options"
+      title
       echo "Showing last 5 messages in $options"
       git chatlog -5
     elif [ "$cm" = "/list" ]; then
@@ -67,6 +76,7 @@ while true ; do
       git switch --quiet --orphan "$options"
       git commit --allow-empty --message "Beginning of Channel $options"
       git push --set-upstream --quiet origin "$options"
+      title
     elif [ "$cm" = "/repeat" ]; then
       : "${options:=5}"
       echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
