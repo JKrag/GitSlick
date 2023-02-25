@@ -13,6 +13,31 @@ C1=$(gum style --underline --bold 'Commands:')
 
 git config alias.chatlog "log --reverse --pretty=\"format:%C(green)%aN %C(blue)[%ad]%C(reset)%n%B\" --date=relative"
 
+get_local_branches () {
+  git branch --format='%(refname:short)'
+}
+
+get_remote_branches () {
+  git for-each-ref --format '%(refname:short)' refs/remotes |
+  while read ref; do
+      if ! git symbolic-ref -q "refs/remotes/$ref" > /dev/null; then
+        echo $ref
+    fi
+  done
+}
+
+get_branches () {
+  # help mapfile
+  # -t	Remove a trailing DELIM from each line read (default newline)
+  # -C callback	Evaluate CALLBACK each time QUANTUM lines are read
+  # -c quantum	Specify the number of lines read between each call to CALLBACK
+  # -O origin	Begin assigning to ARRAY at index ORIGIN.  The default index is 0
+  # mapfile -O "${#BRANCHES[@]}" effecively appends to existing array as "${#BRANCHES[@]}" is the length of the current array
+  mapfile -t BRANCHES < <( get_local_branches ) # if you want the branches that were sent to mapfile in a new array as well
+  mapfile -t -O "${#BRANCHES[@]}" BRANCHES < <( get_remote_branches ) # if you want the branches that were sent to mapfile in a new array as well
+  echo "${BRANCHES[@]}"
+}
+
 commands() {
   local C2 D2 C3 D3 C4 D4 C5 D5 C6 D6 C7 D7 C8 D8 COMMANDS DESCRIBS CMDTABLE
   C2=$(gum style --foreground '10' '/help')
@@ -61,7 +86,7 @@ title(){
   #printf "\[\e]2;%s\a\]"
 }
 welcome
-#title
+title
 fetch_print_ff() {
   gum spin --spinner dot --title Fetching -- git fetch --quiet
   git chatlog "..@{u}"
