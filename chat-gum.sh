@@ -96,34 +96,34 @@ while true ; do
   while IFS=" " read -r -e -p "$(git branch --show-current)> " cm options; do
     fetch_print_ff
     echo
-    if [ "$cm" = "" ]; then
+    if [[ "$cm" = "" ]]; then
       :
-    elif [ "$cm" = "/quit" ]; then
+    elif [[ "$cm" = "/quit" || "$cm" = "/q"  ]]; then
       exit 0
-    elif [ "$cm" = "/exit" ]; then
+    elif [[ "$cm" = "/exit" || "$cm" = "/e" ]]; then
       exit 0
-    elif [ "$cm" = "/help" ]; then
+    elif [[ "$cm" = "/help" || "$cm" = "/h" ]]; then
       echo "$CMDBOX"
       echo
-    elif [ "$cm" = "/switch" ]; then
+    elif [[ "$cm" = "/switch" || "$cm" = "/s" ]]; then
       git switch "$options"
       title
       echo "Showing last 5 messages in $options"
       git chatlog -5
-    elif [ "$cm" = "/list" ]; then
+    elif [[ "$cm" = "/list" || "$cm" = "/l" ]]; then
       echo -e "Existing channels: (use ${GREEN}/switch <channelname>${RC} to change channel"
       git branch -a
-    elif [ "$cm" = "/create" ]; then
+    elif [[ "$cm" = "/create"  || "$cm" = "/c" ]]; then
       echo "Creating new channel $options"
       git switch --quiet --orphan "$options"
       git commit --allow-empty --message "Beginning of Channel $options"
       git push --set-upstream --quiet origin "$options"
       title
-    elif [ "$cm" = "/repeat" ]; then
+    elif [[ "$cm" = "/repeat" || "$cm" = "/r" ]]; then
       : "${options:=5}"
       echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
       git chatlog "-$options"
-    elif [ "$cm" = "/post" ]; then
+    elif [[ "$cm" = "/post" || "$cm" = "/p" ]]; then
       git commit --quiet --allow-empty
       git chatlog -1
       git push --quiet origin
