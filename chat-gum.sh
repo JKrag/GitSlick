@@ -91,47 +91,47 @@ fetch_print_ff() {
   git merge --ff-only --quiet
 }
 
-# fetch_print_ff
-# while true ; do
-#   while IFS=" " read -r -e -p "$(git branch --show-current)> " cm options; do
-#     fetch_print_ff
-#     echo
-#     if [ "$cm" = "" ]; then
-#       :
-#     elif [ "$cm" = "/quit" ]; then
-#       exit 0
-#     elif [ "$cm" = "/exit" ]; then
-#       exit 0
-#     elif [ "$cm" = "/help" ]; then
-#       echo "$CMDBOX"
-#       echo
-#     elif [ "$cm" = "/switch" ]; then
-#       git switch "$options"
-#       title
-#       echo "Showing last 5 messages in $options"
-#       git chatlog -5
-#     elif [ "$cm" = "/list" ]; then
-#       echo -e "Existing channels: (use ${GREEN}/switch <channelname>${RC} to change channel"
-#       git branch -a
-#     elif [ "$cm" = "/create" ]; then
-#       echo "Creating new channel $options"
-#       git switch --quiet --orphan "$options"
-#       git commit --allow-empty --message "Beginning of Channel $options"
-#       git push --set-upstream --quiet origin "$options"
-#       title
-#     elif [ "$cm" = "/repeat" ]; then
-#       : "${options:=5}"
-#       echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
-#       git chatlog "-$options"
-#     elif [ "$cm" = "/post" ]; then
-#       git commit --quiet --allow-empty
-#       git chatlog -1
-#       git push --quiet origin
-#     else
-#       message="$cm $options"
-#       git commit --quiet --allow-empty --message "$message"
-#       git chatlog -1
-#       git push --quiet origin
-#     fi
-#   done
-# done
+fetch_print_ff
+while true ; do
+  while IFS=" " read -r -e -p "$(git branch --show-current)> " cm options; do
+    fetch_print_ff
+    echo
+    if [ "$cm" = "" ]; then
+      :
+    elif [ "$cm" = "/quit" ]; then
+      exit 0
+    elif [ "$cm" = "/exit" ]; then
+      exit 0
+    elif [ "$cm" = "/help" ]; then
+      echo "$CMDBOX"
+      echo
+    elif [ "$cm" = "/switch" ]; then
+      git switch "$options"
+      title
+      echo "Showing last 5 messages in $options"
+      git chatlog -5
+    elif [ "$cm" = "/list" ]; then
+      echo -e "Existing channels: (use ${GREEN}/switch <channelname>${RC} to change channel"
+      git branch -a
+    elif [ "$cm" = "/create" ]; then
+      echo "Creating new channel $options"
+      git switch --quiet --orphan "$options"
+      git commit --allow-empty --message "Beginning of Channel $options"
+      git push --set-upstream --quiet origin "$options"
+      title
+    elif [ "$cm" = "/repeat" ]; then
+      : "${options:=5}"
+      echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
+      git chatlog "-$options"
+    elif [ "$cm" = "/post" ]; then
+      git commit --quiet --allow-empty
+      git chatlog -1
+      git push --quiet origin
+    else
+      message="$cm $options"
+      git commit --quiet --allow-empty --message "$message"
+      git chatlog -1
+      git push --quiet origin
+    fi
+  done
+done
