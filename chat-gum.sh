@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
+command -v gum >/dev/null 2>&1 || { echo >&2 "This advanced version og GitSlick requires Gum to be installed. Install Gum or use pure bash chat.sh instead."; exit 1; }
 
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-RC='\033[0m' # Reset Color
 WIDTH=90
 # https://www.ditig.com/256-colors-cheat-sheet
 export GUM_INPUT_CURSOR_FOREGROUND=45 # 51=Cyan1
