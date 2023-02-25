@@ -110,6 +110,13 @@ while true ; do
       title
       echo "Showing last 5 messages in $options"
       git chatlog -5
+    elif [[ "$cm" = "/k" ]]; then
+      NEWCHAN=$(gum choose  --height=10 --selected=$(git branch --show-current) --limit=1 $(get_branches))
+      echo "Switching to $NEWCHAN"
+      git switch "$NEWCHAN"
+      title
+      echo "Showing last 5 messages in $options"
+      git chatlog -5
     elif [[ "$cm" = "/list" || "$cm" = "/l" ]]; then
       echo -e "Existing channels: (use ${GREEN}/switch <channelname>${RC} to change channel"
       git branch -a
