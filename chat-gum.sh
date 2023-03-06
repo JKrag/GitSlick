@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 command -v gum >/dev/null 2>&1 || { echo >&2 "This advanced version og GitSlick requires Gum to be installed. Install Gum or use pure bash chat.sh instead."; exit 1; }
 
-WIDTH=90
+WIDTH=99
 # https://www.ditig.com/256-colors-cheat-sheet
 export GUM_INPUT_CURSOR_FOREGROUND=45 # 51=Cyan1
 export GUM_INPUT_PROMPT_FOREGROUND=46 # 45=Turquoise2
+BORDER="rounded"
 
-WELCOME=$(gum style --width "$WIDTH" --align center --padding 1 --margin 0 --border double "Welcome to GitSlick, the Git based miniature chat app." )
+GITSLICK=$(gum style --foreground 13 --bold --background 17 "GitSlick")
+WELCOME=$(gum style --background 17 --foreground 250 --width "$WIDTH" --align center --padding 1 --margin 0 --border-background="17" --border $BORDER "Welcome to" "$GITSLICK" "the Git based miniature chat app." )
+
 C1=$(gum style --underline --bold 'Commands:')
 
 git config alias.chatlog "log --reverse --pretty=\"format:%C(green)%aN %C(blue)[%ad]%C(reset)%n%B\" --date=relative"
@@ -55,7 +58,7 @@ commands() {
   COMMANDS=$(gum style --align left --padding "0 1" --margin 0  "$C2" "$C3" "$C4" "$C5" "$C6" "$C7" "$C8")
   DESCRIBS=$(gum style --align left --padding "0 1" --margin 0  "$D2" "$D3" "$D4" "$D5" "$D6" "$D7" "$D8")
   CMDTABLE=$(gum join --horizontal  "$COMMANDS" "$DESCRIBS" )
-  CMDBOX=$(gum style --width "$WIDTH" --border normal "$CMDTABLE")
+  CMDBOX=$(gum style --width "$WIDTH" --border $BORDER "$CMDTABLE")
   #echo "$CMDBOX"
 }
 commands
@@ -66,10 +69,10 @@ welcome() {
     "Anything starting with a slash is a command. E.g. $(gum style --foreground '10' '/help')"\
     "Anything else is treated as a chat message. It will be commited to current dir git repo and pushed immediately to origin" \
     "with $(gum style --bold --foreground 9 "NO") safety checks or error handling."
-  gum style --width "$WIDTH" --align left --padding "0 1" --margin "0 0" --border rounded  \
+  gum style --width "$WIDTH" --align left --padding "0 1" --margin "0 0" --border $BORDER  \
     "$(gum style --bold "NOTE"): Currently only really supports single line messages. Behaviour undefined if pasting multiline content." \
     "But you can now use the $(gum style --foreground '10' '/post') feature if you want to send multiline content."
-  # gum style --width "$WIDTH" --align left --padding "0 1" --margin "0 0" --border normal \
+  # gum style --width "$WIDTH" --align left --padding "0 1" --margin "0 0" --border $BORDER \
   #   "NOTE: You can use $(gum style --foreground '10' '/repeat') to repeat last messages in current channel."
   gum style --width "$WIDTH" --align left --padding "0 1" --margin "0 0" --border hidden \
     "You are currently in folder $(gum style --foreground '14' "$(pwd)")" \
@@ -83,62 +86,67 @@ title(){
   printf '\033]2;%s\a' "$TITLE"
   #printf "\[\e]2;%s\a\]"
 }
-welcome
-title
+
 fetch_print_ff() {
   gum spin --spinner dot --title Fetching -- git fetch --quiet
   git chatlog "..@{u}"
   git merge --ff-only --quiet
 }
 
-fetch_print_ff
-while true ; do
-  while IFS=" " read -r -e -p "$(git branch --show-current)> " cm options; do
-    fetch_print_ff
-    echo
-    if [[ "$cm" = "" ]]; then
-      :
-    elif [[ "$cm" = "/quit" || "$cm" = "/q"  ]]; then
-      exit 0
-    elif [[ "$cm" = "/exit" || "$cm" = "/e" ]]; then
-      exit 0
-    elif [[ "$cm" = "/help" || "$cm" = "/h" ]]; then
-      echo "$CMDBOX"
+main_loop() {
+  while true ; do
+    while IFS=" " read -r -e -p "$(git branch --show-current)> " cm options; do
+      fetch_print_ff
       echo
-    elif [[ "$cm" = "/switch" || "$cm" = "/s" ]]; then
-      git switch "$options"
-      title
-      echo "Showing last 5 messages in $options"
-      git chatlog -5
-    elif [[ "$cm" = "/k" ]]; then
-      NEWCHAN=$(gum choose  --height=10 --selected=$(git branch --show-current) --limit=1 $(get_branches))
-      echo "Switching to $NEWCHAN"
-      git switch "$NEWCHAN"
-      title
-      echo "Showing last 5 messages in $options"
-      git chatlog -5
-    elif [[ "$cm" = "/list" || "$cm" = "/l" ]]; then
-      echo -e "Existing channels: (use ${GREEN}/switch <channelname>${RC} to change channel"
-      git branch -a
-    elif [[ "$cm" = "/create"  || "$cm" = "/c" ]]; then
-      echo "Creating new channel $options"
-      git switch --quiet --orphan "$options"
-      git commit --allow-empty --message "Beginning of Channel $options"
-      git push --set-upstream --quiet origin "$options"
-      title
-    elif [[ "$cm" = "/repeat" || "$cm" = "/r" ]]; then
-      : "${options:=5}"
-      echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
-      git chatlog "-$options"
-    elif [[ "$cm" = "/post" || "$cm" = "/p" ]]; then
-      git commit --quiet --allow-empty
-      git chatlog -1
-      git push --quiet origin
-    else
-      message="$cm $options"
-      git commit --quiet --allow-empty --message "$message"
-      git chatlog -1
-      git push --quiet origin
-    fi
+      if [[ "$cm" = "" ]]; then
+        :
+      elif [[ "$cm" = "/quit" || "$cm" = "/q"  ]]; then
+        exit 0
+      elif [[ "$cm" = "/exit" || "$cm" = "/e" ]]; then
+        exit 0
+      elif [[ "$cm" = "/help" || "$cm" = "/h" ]]; then
+        echo "$CMDBOX"
+        echo
+      elif [[ "$cm" = "/switch" || "$cm" = "/s" ]]; then
+        git switch "$options"
+        title
+        echo "Showing last 5 messages in $options"
+        git chatlog -5
+      elif [[ "$cm" = "/k" ]]; then
+        NEWCHAN=$(gum choose  --height=10 --selected=$(git branch --show-current) --limit=1 $(get_branches))
+        echo "Switching to $NEWCHAN"
+        git switch "$NEWCHAN"
+        title
+        echo "Showing last 5 messages in $options"
+        git chatlog -5
+      elif [[ "$cm" = "/list" || "$cm" = "/l" ]]; then
+        echo -e "Existing channels: (use ${GREEN}/switch <channelname>${RC} to change channel"
+        git branch -a
+      elif [[ "$cm" = "/create"  || "$cm" = "/c" ]]; then
+        echo "Creating new channel $options"
+        git switch --quiet --orphan "$options"
+        git commit --allow-empty --message "Beginning of Channel $options"
+        git push --set-upstream --quiet origin "$options"
+        title
+      elif [[ "$cm" = "/repeat" || "$cm" = "/r" ]]; then
+        : "${options:=5}"
+        echo -e "Repeating last $options messages in ${RED}$(git branch --show-current)${RC}"
+        git chatlog "-$options"
+      elif [[ "$cm" = "/post" || "$cm" = "/p" ]]; then
+        git commit --quiet --allow-empty
+        git chatlog -1
+        git push --quiet origin
+      else
+        message="$cm $options"
+        echo git commit --quiet --allow-empty --message "$message"
+        echo git chatlog -1
+        echo git push --quiet origin
+      fi
+    done
   done
-done
+}
+
+welcome
+title
+#fetch_print_ff
+#main_loop
